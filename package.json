@@ -13,7 +13,8 @@
   "author": "Taras Alehin",
   "license": "ISC",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "dependencies": {
     "express": "^4.16.2",
