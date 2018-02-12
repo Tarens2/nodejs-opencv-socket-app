@@ -1,0 +1,3 @@
+https://github.com/automata/heroku-buildpack-opencv.git
+heroku/nodejs
+https://github.com/heroku/heroku-buildpack-apt
