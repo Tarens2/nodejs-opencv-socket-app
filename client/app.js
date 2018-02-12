@@ -17,14 +17,14 @@ let timerId = 0;
 let widthContainer = $( ".longSlider__longObject" ).width()
 socket.on('faces', function(data) {
   document.querySelector('.countFaces').textContent = data.closer
-  var uint8Arr = new Uint8Array(data.buffer);
-  var str = String.fromCharCode.apply(null, uint8Arr);
-  var base64String = btoa(str);
+  // var uint8Arr = new Uint8Array(data.buffer);
+  // var str = String.fromCharCode.apply(null, uint8Arr);
+  // var base64String = btoa(str);
 
-  img.onload = function () {
-    context.drawImage(this, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = 'data:image/png;base64,' + base64String;
+  // img.onload = function () {
+  //   context.drawImage(this, 0, 0, canvas.width, canvas.height);
+  // };
+  // img.src = 'data:image/png;base64,' + base64String;
 
   clearTimeout(timerId)
   timerId = setInterval(()=> {

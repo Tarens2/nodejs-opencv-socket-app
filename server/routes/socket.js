@@ -30,7 +30,6 @@ module.exports = socket => {
       if(faces.length) {
         sending['faceWidth'] = faces[0].width
         sending['faceHeight'] = faces[0].height
-        sending['buffer'] = im.toBuffer()
         if(Math.abs(averageX - camWidth/2) < 30) {
           sending['direction'] = 'stop'
         } else if (averageX < camWidth/2) {
