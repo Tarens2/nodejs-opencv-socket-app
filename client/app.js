@@ -1,6 +1,3 @@
-// MODIFY THIS TO THE APPROPRIATE URL IF IT IS NOT BEING RUN LOCALLY
-var socket = io();
-
 
 // Elements for taking the snapshot
 var canvas = document.getElementById('canvas');
@@ -9,23 +6,14 @@ var video = document.getElementById('video');
 var img = new Image();
 
 // camera properties
-var camWidth = 320;
-var camHeight = 240;
+const camWidth = 320;
+const camHeight = 240;
 
 let scrolledX = 0;
 let timerId = 0;
 let widthContainer = $( ".longSlider__longObject" ).width()
-socket.on('faces', function(data) {
-  document.querySelector('.countFaces').textContent = data.closer
-  // var uint8Arr = new Uint8Array(data.buffer);
-  // var str = String.fromCharCode.apply(null, uint8Arr);
-  // var base64String = btoa(str);
 
-  // img.onload = function () {
-  //   context.drawImage(this, 0, 0, canvas.width, canvas.height);
-  // };
-  // img.src = 'data:image/png;base64,' + base64String;
-
+let moveSlider = data => {
   clearTimeout(timerId)
   timerId = setInterval(()=> {
     switch (data.direction) {
@@ -48,25 +36,46 @@ socket.on('faces', function(data) {
         break;
     }
   }, 100)  
-})
+}
 
+let drawResponse = data => {
+  // var uint8Arr = new Uint8Array(data.buffer);
+  // var str = String.fromCharCode.apply(null, uint8Arr);
+  // var base64String = btoa(str);
 
+  // img.onload = function () {
+  //   context.drawImage(this, 0, 0, canvas.width, canvas.height);
+  // };
+  // img.src = 'data:image/png;base64,' + base64String;
+}
+
+// socket.on('faces', function(data) {
+//   document.querySelector('.countFaces').textContent = data.closer
+//   moveSlider(data)
+// })
+
+let loopFetching = () => {
+  context.drawImage(video, 0, 0, camWidth, camHeight);
+  var dataURL = canvas.toDataURL();
+  $.ajax({
+    url: '/frame',
+    method: "POST",
+    data: {
+      image: dataURL
+    },
+    success: function(res) {
+      moveSlider(res)
+      loopFetching()
+    }
+  });
+}
 
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  // Not adding `{ audio: true }` since we only want video now
   navigator.mediaDevices.getUserMedia({
     video: true
   }).then(function (stream) {
     video.src = window.URL.createObjectURL(stream);
     video.play();
+    loopFetching()
   });
-
-  setInterval(() => {
-    context.drawImage(video, 0, 0, camWidth, camHeight);
-    var dataURL = canvas.toDataURL();
-    
-    socket.emit("frame", {
-      image: dataURL
-    })
-  }, 500)
 }

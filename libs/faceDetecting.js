@@ -11,18 +11,25 @@ var dimentions = {
 const camWidth = 320
 const camHeight = 240
 
-module.exports = socket => {
-  let faceDetecting = im => {
-    im.detectObject('./node_modules/opencv/data/haarcascade_eye.xml', {}, (err, faces) => {
+module.exports.faceDetecting = (data, res) => {
+  const pngPrefix = 'data:image/jpeg;base64,';
+  const jpgPrefix = 'data:image/png;base64,';
+
+  const base64Data = data.image.replace(pngPrefix, '').replace(jpgPrefix, '');
+  const buffer = Buffer.from(base64Data, 'base64');
+
+  console.log(buffer)
+  cv.readImage(buffer, (err, img) => {
+    img.detectObject('./node_modules/opencv/data/haarcascade_eye.xml', {}, (err, faces) => {
       if (err) throw err;
       let averageX = 0
       for (var i = 0; i < faces.length; i++) {
         face = faces[i];
-        im.rectangle([face.x, face.y], [face.width, face.height], rectColor, rectThickness);
+        // im.rectangle([face.x, face.y], [face.width, face.height], rectColor, rectThickness);
         averageX += face.x + face.width / 2
       }
       averageX = averageX / faces.length
-
+  
       let sending = {
         facesLength: faces.length,
         direction: 'stop'
@@ -38,22 +45,11 @@ module.exports = socket => {
           sending['direction'] = 'right'
         }
         sending['speed'] = Math.sqrt(1 + Math.abs(averageX - camWidth/2))
-        socket.emit('faces', sending);
-      } else {
-        socket.emit('faces', sending);
       }
-      
-    });
-  }
-
-  socket.on('frame', data => {
-    const pngPrefix = 'data:image/jpeg;base64,';
-    const jpgPrefix = 'data:image/png;base64,';
-
-    const base64Data = data.image.replace(pngPrefix, '').replace(jpgPrefix, '');
-    const buffer = Buffer.from(base64Data, 'base64');
-    const img = cv.readImage(buffer, (err, img) => {
-      faceDetecting(img)
+      res.json(sending)
     });
   });
+
+  
 }
+

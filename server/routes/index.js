@@ -1,7 +1,11 @@
-// Load the page
-// NB: This needs to be the last route added
+const {faceDetecting} = require('../../libs/faceDetecting')
+
 exports.serveIndex = function (app, staticFolder) {
-    app.get('*', function (req, res) {
+  app.post('/frame', function (req, res) {
+    faceDetecting(req.body, res)
+  })
+
+  app.get('*', function (req, res) {
       res.sendFile('index.html', { root: staticFolder });
     });
-  };
+};

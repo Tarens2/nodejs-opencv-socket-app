@@ -5,23 +5,24 @@ var express = require('express')
 
 // configuration files
 var configServer = require('./server/config/server');
+var bodyParser = require('body-parser')
 
 // app parameters
 var app = express();
 app.set('port', configServer.httpPort);
 app.use(express.static(configServer.staticFolder));
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({
+  extended: true,
+  limit: '50mb'
+}));
+app.use(bodyParser.json());
 
 // serve index
 require('./server/routes').serveIndex(app, configServer.staticFolder);
 
 // HTTP server
 var server = http.createServer(app);
-
-
-// WebSocket server
-var io = require('socket.io')(server);
-io.on('connection', require('./server/routes/socket'));
 
 
 server.listen(app.get('port'), function () {
