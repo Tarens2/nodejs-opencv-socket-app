@@ -1,0 +1,48 @@
+.container {
+    padding-top: 50px;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+  #canvas-video {
+    width: 640px;
+    height: 480px;
+    border: 1px solid #ccc;
+  }
+  
+  .countFaces {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 200px;
+    height: 30px;
+    border: 2px solid black;
+    text-align: center;
+    line-height: 30px;
+    font-style: 24px;
+    color: black;
+  }
+  
+  
+  .longSlider {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 300px;
+    height: 200px;
+    border: 2px solid black;
+    text-align: center;
+    line-height: 30px;
+    font-style: 24px;
+    color: black;
+    overflow-x: scroll;
+  }
+  
+  .longSlider__longObject {
+    width: 20000px;
+  
+    background:url(/unnamed.png);
+    height: 150px;
+  }
