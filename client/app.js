@@ -35,24 +35,19 @@ let moveSlider = data => {
         // TODO: stop animation
         break;
     }
-  }, 100)  
+  }, 10)  
 }
 
 let drawResponse = data => {
-  // var uint8Arr = new Uint8Array(data.buffer);
-  // var str = String.fromCharCode.apply(null, uint8Arr);
-  // var base64String = btoa(str);
+  var uint8Arr = new Uint8Array(data.buffer);
+  var str = String.fromCharCode.apply(null, uint8Arr);
+  var base64String = btoa(str);
 
-  // img.onload = function () {
-  //   context.drawImage(this, 0, 0, canvas.width, canvas.height);
-  // };
-  // img.src = 'data:image/png;base64,' + base64String;
+  img.onload = function () {
+    context.drawImage(this, 0, 0, canvas.width, canvas.height);
+  };
+  img.src = 'data:image/png;base64,' + base64String;
 }
-
-// socket.on('faces', function(data) {
-//   document.querySelector('.countFaces').textContent = data.closer
-//   moveSlider(data)
-// })
 
 let loopFetching = () => {
   context.drawImage(video, 0, 0, camWidth, camHeight);
