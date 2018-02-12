@@ -11,9 +11,9 @@ var dimentions = {
 const camWidth = 320
 const camHeight = 240
 
-module.exports = (socket) => {
+module.exports = socket => {
   let faceDetecting = im => {
-    im.detectObject('./node_modules/opencv/data/haarcascade_eye.xml', {}, function (err, faces) {
+    im.detectObject('./node_modules/opencv/data/haarcascade_eye.xml', {}, (err, faces) => {
       if (err) throw err;
       let averageX = 0
       for (var i = 0; i < faces.length; i++) {
@@ -47,7 +47,7 @@ module.exports = (socket) => {
     });
   }
 
-  socket.on('frame', (data) => {
+  socket.on('frame', data => {
     const pngPrefix = 'data:image/jpeg;base64,';
     const jpgPrefix = 'data:image/png;base64,';
 
