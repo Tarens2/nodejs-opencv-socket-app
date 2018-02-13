@@ -1,5 +1,5 @@
 var path = require('path')
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3335
 
 module.exports = {
   httpPort: PORT,

@@ -18,7 +18,6 @@ module.exports.faceDetecting = (data, res) => {
   const base64Data = data.image.replace(pngPrefix, '').replace(jpgPrefix, '');
   const buffer = Buffer.from(base64Data, 'base64');
 
-  console.log(buffer)
   cv.readImage(buffer, (err, img) => {
     img.detectObject('./node_modules/opencv/data/haarcascade_eye.xml', {}, (err, faces) => {
       if (err) throw err;
