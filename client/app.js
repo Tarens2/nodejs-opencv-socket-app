@@ -1,4 +1,3 @@
-
 // Elements for taking the snapshot
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
@@ -60,10 +59,10 @@ let loopFetching = () => {
     },
     success: function(res) {
       moveSlider(res)
-      loopFetching()
     }
   });
 }
+
 
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices.getUserMedia({
@@ -71,6 +70,6 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   }).then(function (stream) {
     video.src = window.URL.createObjectURL(stream);
     video.play();
-    loopFetching()
+    setInterval(loopFetching, 500)
   });
 }

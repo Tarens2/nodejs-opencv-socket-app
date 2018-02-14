@@ -14,10 +14,13 @@ const camHeight = 240
 module.exports.faceDetecting = (data, res) => {
   const pngPrefix = 'data:image/jpeg;base64,';
   const jpgPrefix = 'data:image/png;base64,';
+  if (data.image.indexOf(pngPrefix) === -1 && data.image.indexOf(jpgPrefix) === -1) {
+    throw new Error('Wrong format file')   
+  }
 
   const base64Data = data.image.replace(pngPrefix, '').replace(jpgPrefix, '');
   const buffer = Buffer.from(base64Data, 'base64');
-
+  
   cv.readImage(buffer, (err, img) => {
     img.detectObject('./node_modules/opencv/data/haarcascade_eye.xml', {}, (err, faces) => {
       if (err) throw err;

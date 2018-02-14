@@ -18,24 +18,27 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({
   extended: true,
   limit: '50mb'
-}));
+}));  
 app.use(bodyParser.json());
 
 // serve index
 require('./server/routes').serveIndex(app, configServer.staticFolder);
 
-var gcInterval;
-function init()
-{
-    gcInterval = setInterval(function() { gcDo(); }, 60000);
-}
-function gcDo()
-{
-    global.gc();
-    clearInterval(gcInterval);
+if(global.gc) {
+    var gcInterval;
+    function init()
+    {
+        gcInterval = setInterval(function() { gcDo(); }, 60000);
+    }
+    function gcDo()
+    {
+        global.gc();
+        clearInterval(gcInterval);
+        init();
+    }
     init();
 }
-init();
+
 
 // HTTP server
 var server = http.createServer(app);

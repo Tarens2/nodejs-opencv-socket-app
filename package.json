@@ -13,6 +13,7 @@
   "author": "Taras Alehin",
   "license": "ISC",
   "scripts": {
+    "start-cluster": "cservice app.js --accessKey lksjdf982734",
     "start": "cross-env NODE_ENV=production node --nouse-idle-notification --expose-gc app.js",
     "dev": "nodemon app.js"
   },
