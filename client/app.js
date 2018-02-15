@@ -12,7 +12,7 @@ let scrolledX = 0;
 let timerId = 0;
 let widthContainer = $( ".longSlider__longObject" ).width()
 
-let moveSlider = data => {
+let startSlider = data => {
   clearTimeout(timerId)
   timerId = setInterval(()=> {
     switch (data.direction) {
@@ -47,10 +47,18 @@ let drawResponse = data => {
   };
   img.src = 'data:image/png;base64,' + base64String;
 }
+let state = {
+  intervalId: 0,
+  pause: false,
+  pauseTime: 500
+}
 
-let loopFetching = () => {
+let sendVideoFrame = () => {
+  if (state.pause) return
   context.drawImage(video, 0, 0, camWidth, camHeight);
-  var dataURL = canvas.toDataURL();
+  var dataURL = canvas.toDataURL('image/jpeg', 1);
+
+  state.pause = true;
   $.ajax({
     url: '/frame',
     method: "POST",
@@ -58,10 +66,42 @@ let loopFetching = () => {
       image: dataURL
     },
     success: function(res) {
-      moveSlider(res)
+      startSlider(res)
+      setTimeout(() => {
+        state.pause = false
+      }, state.pauseTime)
+      
+      setTimeout(() => {
+        sendVideoFrame()
+      }, 2000)
     }
   });
 }
+
+function initSuccess() {
+	DiffCamEngine.start();
+}
+
+function initError() {
+	alert('Something went wrong.');
+}
+
+function capture(payload) {
+	if(payload.score > 150 && !state.pause) {
+    console.log(payload.score)
+    sendVideoFrame()
+  }
+}
+
+DiffCamEngine.init({
+	video: video,
+	initSuccessCallback: initSuccess,
+	initErrorCallback: initError,
+  captureCallback: capture,
+  captureWidth: 320,
+  captureHeight: 240
+});
+
 
 
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -70,6 +110,6 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   }).then(function (stream) {
     video.src = window.URL.createObjectURL(stream);
     video.play();
-    setInterval(loopFetching, 500)
+
   });
 }

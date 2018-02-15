@@ -1,4 +1,4 @@
-const {faceDetecting} = require('../../libs/faceDetecting')
+const {faceDetecting} = require('../libs/faceDetecting')
 
 exports.serveIndex = function (app, staticFolder) {
   app.post('/frame', function (req, res) {
